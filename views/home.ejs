@@ -1,0 +1,85 @@
+
+<h1>
+    Codeial / <%= title %>
+</h1>
+
+
+<section id="feed-posts">
+    <h4>Posts</h4>
+
+    <!-- here locals is just an object if we keep only user we cannot fetch it throuws an error user is not found by this way we can restrict the user,by this we can restrict that only signed in user can post  -->
+    <% if(locals.user){ %>
+    <form action="/posts/create" id="new-post-form" method="POST">
+    <textarea name="content" cols="30" rows="3" placeholder="Type Here..." required>
+
+    </textarea>
+        <input type="submit" value="Post">
+    </form>
+    <% } %>
+
+
+<div id="posts-list-container">
+    <ul>
+        <% for (post of posts){%> 
+            
+            <li> 
+                <P>
+                    <!-- this below post is took fromt the above for loop post -->
+                        <%= post.content %>
+                        <br>
+                        <small>
+                            <!-- here user refers to the user object type object id and refers to the model,and name is took from above form only -->
+                            <%= post.user.name %> 
+                        </small>
+                </P>
+
+
+
+                        <!-- COMMENTS... -->
+
+
+
+                <!-- creating a form page for comments... -->
+<div class="post-comments">
+<!-- we need to show this form to only those are signed in so we took local.user -->
+        <% if(locals.user){%>
+            <!-- here method is post since we are sending some data ,here comments and create is took from routes(index.js)+controllers(comments file action)-->
+            <form action="/comments/create" method="POST">
+                <input type="text" name="content" placeholder="type here to add comment.." required>
+
+                <!-- id of the post to which comment need  to be added either we allow user to send that or place it in an hidden input -->
+                <input type="hidden" name="post" value="<%= post._id %>">
+                <input type="submit" value="Add Comment">
+
+            </form>                  
+        <%}%>
+
+        <div class="post-comments-list">
+            <ul id="post-comments-<%=post._id %>">
+        <!-- since the comments are inside the post -->
+                <% for(comment of post.comments){%> 
+                    <!-- p tag is for showing the comments -->
+                    <!-- here content is took from the schema page of comments,and comment is took from the above for loop comment -->
+                    <%=comment.content %>
+                    <br>
+                    <!-- small is for showing the user  actually the small tags in html refers to side comments and small print-->
+                    <small>
+
+                        <%= comment.user.name %>
+                    </small>
+                    
+                    <%} %> 
+
+            </ul>
+
+        </div>
+        
+                </div>
+            </li>
+            
+            
+            <%}%>   
+    </ul>
+
+</div>
+</section>
